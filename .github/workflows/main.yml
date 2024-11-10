@@ -1,0 +1,39 @@
+import tkinter 
+import random
+
+
+bleh = tkinter.Tk()
+bleh.geometry("300x300")
+
+def name():
+    text = E1.get()
+    Label1.config(text= text)
+    reverse = text[::-1]
+    Label2.config(text= reverse)
+    randomtext = ' '.join(random.sample(text, len(text)))
+    Label3.config(text= randomtext)
+    alpha = ' '.join(sorted(text))
+    Label4.config(text= alpha)
+
+Label5=tkinter.Label(bleh, text='Enter a sentence with at least 10 letters')
+Label5.pack()
+
+E1 = tkinter.Entry(bleh)
+E1.pack()
+
+Label1=tkinter.Label(bleh, text='Original')
+Label1.pack()
+
+Label2=tkinter.Label(bleh, text='Reversed')
+Label2.pack()
+
+Label3=tkinter.Label(bleh, text='Randomized')
+Label3.pack()
+
+Label4=tkinter.Label(bleh, text='Alphabetical')
+Label4.pack()
+
+Button1=tkinter.Button(bleh, text='JUMBLE', command=name)
+Button1.pack()
+
+bleh.mainloop()
