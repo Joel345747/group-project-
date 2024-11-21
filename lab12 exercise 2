@@ -1,0 +1,25 @@
+import tkinter as tk
+
+def change_background():
+    selected_color = listbox.get(listbox.curselection())
+    meow.config(bg=selected_color)
+    label.config(text=selected_color)
+
+meow = tk.Tk()
+meow.title("Color Selector")
+meow.geometry("300x200")
+
+colors = ["red", "blue", "green", "orange", "cyan", "gray"]
+
+listbox = tk.Listbox(meow,height=6)
+for color in colors:
+    listbox.insert(tk.END, color)
+listbox.pack()
+
+button = tk.Button(meow, text="Set Color", command=change_background)
+button.pack()
+
+label = tk.Label(meow, text="none")
+label.pack()
+
+meow.mainloop()
