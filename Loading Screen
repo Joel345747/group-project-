@@ -4,16 +4,16 @@ def start_game():
     print("Game Started!") 
     root.destroy()  
 
-root = tk.Tk()
-root.title("Dino Game")
-root.geometry("600x400")  
-root.configure(bg="white")
+cat = tk.Tk()
+cat.title("Dino Game")
+cat.geometry("600x400")  
+cat.configure(bg="white")
 
-canvas = tk.Canvas(root, width=600, height=300, bg="white", highlightthickness=0)
-canvas.pack()
+dog = tk.Canvas(root, width=600, height=300, bg="white", highlightthickness=0)
+dog.pack()
 
 title_text = "DINO GAME"
-canvas.create_text(300, 100, text=title_text, font=("Arial", 36, "bold"), fill="black")
+dog.create_text(300, 100, text=title_text, font=("Arial", 36, "bold"), fill="black")
 
 instructions = (
     "Press 'Space' to jump\n"
@@ -23,7 +23,7 @@ instructions = (
     "Press Space to jump\n"
     
 )
-canvas.create_text(300, 200, text=instructions, font=("Arial", 16), fill="gray")
+dog.create_text(300, 200, text=instructions, font=("Arial", 16), fill="gray")
 
 start_button = tk.Button(
     root, 
@@ -35,5 +35,5 @@ start_button = tk.Button(
 )
 start_button.pack(pady=20)
 
-root.mainloop()
+cat.mainloop()
 
