@@ -1,0 +1,144 @@
+import pygame
+import sys
+import tkinter as tk
+
+def start_game():
+    print("Game Started!") 
+    root.destroy()  
+
+root = tk.Tk()
+root.title("Dino Game")
+root.geometry("600x400")  
+root.configure(bg="white")
+
+canvas = tk.Canvas(root, width=600, height=300, bg="white", highlightthickness=0)
+canvas.pack()
+
+title_text = "DINO GAME"
+canvas.create_text(300, 100, text=title_text, font=("Arial", 36, "bold"), fill="black")
+
+instructions = (
+    "Press 'Space' to jump\n"
+    "Avoid obstacles to survive\n"
+    "Click 'Start' to begin!\n"
+    "Instructions: \n"
+    "Press Space to jump\n"
+    
+)
+canvas.create_text(300, 200, text=instructions, font=("Arial", 16), fill="gray")
+
+start_button = tk.Button(
+    root, 
+    text="Start", 
+    font=("Arial", 16, "bold"), 
+    bg="green", 
+    fg="white", 
+    command=start_game
+)
+start_button.pack(pady=20)
+
+
+pygame.init()
+
+# Screen dimensions
+WIDTH = 800
+HEIGHT = 400
+screen = pygame.display.set_mode((WIDTH, HEIGHT))
+pygame.display.set_caption("Dinosaur Game")
+
+# Colors
+WHITE = (255, 255, 255)
+BLACK = (0, 0, 0)
+
+# Frame rate
+clock = pygame.time.Clock()
+FPS = 60
+
+# Dinosaur attributes
+
+dino_width = 50 
+dino_height = 50
+dino_x = 50
+dino_y = HEIGHT - dino_height - 50 
+dino_velocity = 0  
+dino_image = pygame.image.load("Dino1.png")
+dino_image = pygame.transform.scale(dino_image, (dino_height, dino_width))
+
+is_jumping = False
+gravity = 0.8
+
+# Ground
+ground_x = 0
+ground_y = HEIGHT - 50
+ground_image = pygame.image.load("ground.png")
+ground_image = pygame.transform.scale(ground_image, (WIDTH, 50))
+
+# Obstacles
+obstacle_width = 50
+obstacle_height = 50
+obstacle_x = WIDTH
+obstacle_y = ground_y - obstacle_height
+obstacle_speed = 5
+cactus_image = pygame.image.load("cactus1.png")
+cactus_image = pygame.transform.scale(cactus_image, (obstacle_height, obstacle_width))
+score = 0
+
+while True:
+    screen.fill(WHITE)  # Clear screen
+
+    # Action
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            pygame.quit()
+            sys.exit()
+        if event.type == pygame.KEYDOWN and not is_jumping:
+            if event.key == pygame.K_SPACE:  
+                is_jumping = True
+                dino_velocity = -15
+
+    # Dinosaur movement
+    if is_jumping:
+        dino_velocity += gravity
+        dino_y += dino_velocity
+        if dino_y >= HEIGHT - dino_height - 50:  # Hit the ground
+            dino_y = HEIGHT - dino_height - 50
+            is_jumping = False
+
+    # Obstacle movement
+    obstacle_x -= obstacle_speed
+    if obstacle_x + obstacle_width < 0:  # Reset obstacle
+        obstacle_x = WIDTH
+        score += 1
+
+    # Ground movement
+    ground_x -= obstacle_speed
+    if ground_x <= -WIDTH:
+        ground_x = 0
+
+    # Collision
+    dino_rect = pygame.Rect(dino_x, dino_y, dino_width, dino_height)
+    obstacle_rect = pygame.Rect(obstacle_x, obstacle_y, obstacle_width, obstacle_height)
+
+    if dino_rect.colliderect(obstacle_rect):
+        print("Game Over! Score:", score)
+        pygame.quit()
+        sys.exit()
+
+    # Inserting ground image
+    screen.blit(ground_image, (ground_x, ground_y))
+    screen.blit(ground_image, (ground_x + WIDTH, ground_y))
+
+    # Inserting dino image
+    screen.blit(dino_image, (dino_x, dino_y))
+
+    # Inserting cacti image
+    screen.blit(cactus_image, (obstacle_x, obstacle_y))
+
+    # Score
+    font = pygame.font.Font(None, 36)
+    score_text = font.render(f"Score: {score}", True, BLACK)
+    screen.blit(score_text, (10, 10))
+
+    pygame.display.flip()  # Update display
+    clock.tick(FPS)  # Control frame rate
+root.mainloop()
