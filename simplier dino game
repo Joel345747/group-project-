@@ -4,7 +4,8 @@ import sys
 pygame.init()
 
 # Screen dimensions
-WIDTH, HEIGHT = 800, 400
+WIDTH = 800
+HEIGHT = 400
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("Dinosaur Game")
 
@@ -17,35 +18,44 @@ clock = pygame.time.Clock()
 FPS = 60
 
 # Dinosaur attributes
-dino_width, dino_height = 50, 50
+
+dino_width = 50 
+dino_height = 50
 dino_x = 50
-dino_y = HEIGHT - dino_height - 50  # Start on the ground
-dino_velocity = 0  # For jumping
+dino_y = HEIGHT - dino_height - 50 
+dino_velocity = 0  
+dino_image = pygame.image.load("Dino1.png")
+dino_image = pygame.transform.scale(dino_image, (dino_height, dino_width))
 
 is_jumping = False
 gravity = 0.8
 
 # Ground
+ground_x = 0
 ground_y = HEIGHT - 50
+ground_image = pygame.image.load("ground.png")
+ground_image = pygame.transform.scale(ground_image, (WIDTH, 50))
 
-# Obstacles (Cacti)
-obstacle_width, obstacle_height = 30, 50
+# Obstacles
+obstacle_width = 50
+obstacle_height = 50
 obstacle_x = WIDTH
 obstacle_y = ground_y - obstacle_height
 obstacle_speed = 5
-
+cactus_image = pygame.image.load("cactus1.png")
+cactus_image = pygame.transform.scale(cactus_image, (obstacle_height, obstacle_width))
 score = 0
 
 while True:
     screen.fill(WHITE)  # Clear screen
 
-    # Event handling
+    # Action
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             pygame.quit()
             sys.exit()
         if event.type == pygame.KEYDOWN and not is_jumping:
-            if event.key == pygame.K_SPACE:  # Jump
+            if event.key == pygame.K_SPACE:  
                 is_jumping = True
                 dino_velocity = -15
 
@@ -63,7 +73,12 @@ while True:
         obstacle_x = WIDTH
         score += 1
 
-    # Collision detection
+    # Ground movement
+    ground_x -= obstacle_speed
+    if ground_x <= -WIDTH:
+        ground_x = 0
+
+    # Collision
     dino_rect = pygame.Rect(dino_x, dino_y, dino_width, dino_height)
     obstacle_rect = pygame.Rect(obstacle_x, obstacle_y, obstacle_width, obstacle_height)
 
@@ -72,16 +87,17 @@ while True:
         pygame.quit()
         sys.exit()
 
-    # Draw ground
-    pygame.draw.rect(screen, BLACK, (0, ground_y, WIDTH, HEIGHT - ground_y))
+    # Inserting ground image
+    screen.blit(ground_image, (ground_x, ground_y))
+    screen.blit(ground_image, (ground_x + WIDTH, ground_y))
 
-    # Draw dinosaur
-    pygame.draw.rect(screen, BLACK, (dino_x, dino_y, dino_width, dino_height))
+    # Inserting dino image
+    screen.blit(dino_image, (dino_x, dino_y))
 
-    # Draw obstacle
-    pygame.draw.rect(screen, BLACK, (obstacle_x, obstacle_y, obstacle_width, obstacle_height))
+    # Inserting cacti image
+    screen.blit(cactus_image, (obstacle_x, obstacle_y))
 
-    # Draw score
+    # Score
     font = pygame.font.Font(None, 36)
     score_text = font.render(f"Score: {score}", True, BLACK)
     screen.blit(score_text, (10, 10))
