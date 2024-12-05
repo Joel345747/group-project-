@@ -26,6 +26,10 @@ dino_y = HEIGHT - dino_height - 50
 dino_velocity = 0  
 dino_image = pygame.image.load("Dino1.png")
 dino_image = pygame.transform.scale(dino_image, (dino_height, dino_width))
+dino_image2 = pygame.image.load("Dino2 (1).png")
+dino_image2 = pygame.transform.scale(dino_image2, (dino_height, dino_width))
+dino_image3 = pygame.image.load("DinoJumping (1).png")
+dino_image3 = pygame.transform.scale(dino_image3, (dino_height, dino_width))
 
 is_jumping = False
 gravity = 0.8
@@ -46,6 +50,11 @@ cactus_image = pygame.image.load("cactus1.png")
 cactus_image = pygame.transform.scale(cactus_image, (obstacle_height, obstacle_width))
 score = 0
 
+Running = True
+clock = pygame.time.Clock()
+Current_image = 0
+Dino = [dino_image, dino_image2]
+
 while True:
     screen.fill(WHITE)  # Clear screen
 
@@ -58,6 +67,8 @@ while True:
             if event.key == pygame.K_SPACE:  
                 is_jumping = True
                 dino_velocity = -15
+    #Runing Animation
+    Current_image = (Current_image + 1) % 2
 
     # Dinosaur movement
     if is_jumping:
@@ -92,7 +103,7 @@ while True:
     screen.blit(ground_image, (ground_x + WIDTH, ground_y))
 
     # Inserting dino image
-    screen.blit(dino_image, (dino_x, dino_y))
+    screen.blitDino[Current_image], (dino_x, dino_y))
 
     # Inserting cacti image
     screen.blit(cactus_image, (obstacle_x, obstacle_y))
